@@ -1,0 +1,26 @@
+<launch>
+  <!--<arg name="multi_robot_name" default=""/>-->
+  <arg name="set_lidar_frame_id" default="base_scan"/>
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi, flushbot]"/>
+  <arg name="set_base_frame" default="base_footprint"/>
+  <arg name="set_base_link" default="base_link"/>
+  <arg name="set_imu_link" default="imu_link"/>
+  
+  <include file="$(find turtlebot3_bringup)/launch/turtlebot3_model.launch">
+  </include>
+  <include file="$(find turtlebot3_bringup)/launch/turtlebot3_lidar.launch">
+  </include>
+
+  <!--<node pkg="turtlebot3_bringup" type="turtlebot3_diagnostics" name="turtlebot3_diagnostics" output="screen"/>-->
+
+  <!-- rosserial_python node execute -->
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node" output="screen">
+    <param name="port" value="/dev/ttyACM0"/>
+    <param name="baud" value="230400"/>
+    <!-- setting -->
+    <param name="base_frame" value="$(arg set_base_frame)"/>
+    <param name="base_link" value="$(arg set_base_frame)"/>
+    <param name="imu_link" value="$(arg set_imu_link)"/>
+  </node>  
+
+</launch>
