@@ -1,0 +1,20 @@
+local_costmap:
+  global_frame: odom
+  robot_base_frame: base_footprint
+
+# Setting New update frequency 
+  update_frequency: 10.0
+  publish_frequency: 10.0
+  transform_tolerance: 0.5  
+# 현재 업데이트 주기가 너무 빨라서 CPU 사용량을 초과하는 거 같기도함
+
+  static_map: false
+  rolling_window: true
+  width: 3
+  height: 3
+  resolution: 0.05
+  
+# what is local costmap? 
+# 로봇이 현재 위치 주변의 짧은 거리 내에서의 경로를 계획하고 실시간으로 장애물을 회피하는데 사용된다. 
+# 로봇 주변의 작은 영역을 포함하는 맵 
+  

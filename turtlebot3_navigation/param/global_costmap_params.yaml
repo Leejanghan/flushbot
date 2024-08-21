@@ -1,0 +1,13 @@
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_footprint
+
+  update_frequency: 10.0
+  publish_frequency: 10.0
+  transform_tolerance: 0.5
+
+  static_map: true
+ 
+ # what is Global costmap?
+ # 로봇이 전체 경로를 계획하고 전역적인 경로를 찾는데 사용된다. 
+ # 로봇의 작업 공간 전체를 포함하는 큰 맵 
