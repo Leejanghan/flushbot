@@ -178,7 +178,7 @@
   <joint name="imu_joint" type="fixed">
     <parent link="base_link"/>
     <child link="imu_link"/>
-    <origin xyz="0 0 0.0845" rpy="0 0 0"/>
+    <origin xyz="0.08 0.08 0.0845" rpy="0 0 0"/>
   </joint>
 
   <link name="imu_link"/>
@@ -186,13 +186,13 @@
   <joint name="scan_joint" type="fixed">
     <parent link="base_link"/>
     <child link="base_scan"/>
-    <origin xyz="0.175 0 0.70" rpy="0 0 0"/>
+    <origin xyz="0.115 0.145 0.58" rpy="0 0 0"/>
   </joint>
 
 <!-- sensor place -->
   <link name="base_scan">
     <visual>
-      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <origin xyz="0 0 0.0" rpy="0 0 3.141"/>
       <geometry>
         <mesh filename="package://turtlebot3_description/meshes/sensors/lds.stl" scale="0.001 0.001 0.001"/>
       </geometry>
