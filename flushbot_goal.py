@@ -17,11 +17,6 @@ import threading
 import time
 from geometry_msgs.msg import Twist
 
-lidar_distance = None
-lidar_threshold = 10.0 # consider about stop delay
-cmd_vel_pub = 0.
-drive_status = False 
-
 class MoveRobot:
     def __init__(self):
     	# Initialize the ROS node 
@@ -48,7 +43,9 @@ class MoveRobot:
         # Internal state variables 
         self.flushbot_status = False
         self.drive_status = False 
-          
+        self.drive_status = False 
+        self.cmd_vel_pub = 0.
+
 	# 서비스는 동기적인 원격 프로시저 호출 : 한 노드가 다른 노드에서 실행되는 함수 호출을 가능하게 함. 
     def clear_costmaps(self):
     	rospy.wait_for_service('/move_base/clear_costmaps') # 서버에서 서비스가 광고되기를 기다림
@@ -113,9 +110,9 @@ class MoveRobot:
                 vel_msg=Twist()
                 vel_msg.linear.x= -0.1
                 self.cmd_vel_pub.publish(vel_msg)
-                rospy.loginfo("LiDAR_distance: %f", lidar_distance)
+                rospy.loginfo("LiDAR_distance: %f", self.lidar_distance)
             else:
-                rospy.loginfo("LiDAR_distance: %f", lidar_distance)
+                rospy.loginfo("LiDAR_distance: %f", self.lidar_distance)
                 rospy.loginfo("LiDAR distance above threshold")
                 vel_msg=Twist()
                 vel_msg.linear.x=0.0
@@ -155,7 +152,7 @@ class MoveRobot:
         
         # Move to the first goal 
         if self.flushbot_status : 
-            result = self.movebase_client(1)
+            result = self.movebase_client(1)￣
         else: 
             result = False 
         
