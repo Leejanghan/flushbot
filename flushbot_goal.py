@@ -41,10 +41,10 @@ class MoveRobot:
         threading.Thread(target=self.lidar_sub).start()
         
         # Internal state variables 
-        self.flushbot_status = False
+        self.flushbot_status = 0.0
         self.drive_status = False 
         self.drive_status = False 
-        self.cmd_vel_pub = 0.
+        
 
 	# 서비스는 동기적인 원격 프로시저 호출 : 한 노드가 다른 노드에서 실행되는 함수 호출을 가능하게 함. 
     def clear_costmaps(self):
@@ -62,10 +62,10 @@ class MoveRobot:
         goal.target_pose.header.stamp = rospy.Time.now()
     
         if x==1:
-            goal.target_pose.pose.position.x = -0.75751
-            goal.target_pose.pose.position.y = 7.0499
-            goal.target_pose.pose.orientation.z = 0.999708
-            goal.target_pose.pose.orientation.w = 0.024174
+            goal.target_pose.pose.position.x = 3.656
+            goal.target_pose.pose.position.y = 0.2732
+            goal.target_pose.pose.orientation.z = 0.0231
+            goal.target_pose.pose.orientation.w = 0.999
         else: 
             goal.target_pose.pose.position.x = 0.
             goal.target_pose.pose.position.y = 0.
@@ -151,8 +151,8 @@ class MoveRobot:
             rospy.sleep(3)
         
         # Move to the first goal 
-        if self.flushbot_status : 
-            result = self.movebase_client(1)￣
+        if self.flushbot_status == 1.0 : 
+            result = self.movebase_client(1)
         else: 
             result = False 
         
@@ -163,14 +163,14 @@ class MoveRobot:
             self.stop_motion(5)
             rospy.sleep(5)
             
-            global flushbot_status
-            flushbot_status = False
+            
+            self.flushbot_status = 0.0
             
             global current_position
             current_position = "point_3"
-            self.flushbot_pub.publish(self.current_position)
+            self.flushbot_pub.publish(current_position)
             
-        if self.flushbot_status :         
+        if self.flushbot_status == 2.0 :         
             self.backward_motion(10)
             self.clear_costmaps()
             rospy.sleep(5)
