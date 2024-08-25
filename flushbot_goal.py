@@ -69,11 +69,6 @@ class MoveRobot:
             goal.target_pose.pose.position.y = 7.0499
             goal.target_pose.pose.orientation.z = 0.999708
             goal.target_pose.pose.orientation.w = 0.024174
-            
-            global current_position
-            current_positon = "point_3"
-            self.flushbot_pub.publish(self.current_position)
-        
         else: 
             goal.target_pose.pose.position.x = 0.
             goal.target_pose.pose.position.y = 0.
@@ -127,7 +122,7 @@ class MoveRobot:
                 self.cmd_vel_pub.publish(vel_msg)
                 break
 
-    def backward_motion(duration):
+    def backward_motion(self, duration):
         # Create Twist message for backwards motion
         vel_msg = Twist()
         vel_msg.linear.x = 0.1  # Move backwards (화장실 기준 뒤)
@@ -142,14 +137,14 @@ class MoveRobot:
         self.cmd_vel_pub.publish(vel_msg)
         rospy.loginfo("Stopped moving")   
 
-    def stop_motion(duration):
+    def stop_motion(self, duration):
         vel_msg = Twist()
         vel_msg.linear.x = 0.0 # Move stop
         self.cmd_vel_pub.publish(vel_msg)
         rospy.loginfo("stopped moving")
         rospy.sleep(duration)
  
-    def flushbot_status_callback(msg):
+    def flushbot_status_callback(self,msg):
         self.flushbot_status = msg.data
         rospy.loginfo("Received flushbot_status : %s", self.flushbot_status)
     
@@ -169,7 +164,16 @@ class MoveRobot:
             rospy.loginfo("Arrived at first goal")
             self.adjust_position()
             self.stop_motion(5)
-            rospy.sleep()
+            rospy.sleep(5)
+            
+            global flushbot_status
+            flushbot_status = False
+            
+            global current_position
+            current_position = "point_3"
+            self.flushbot_pub.publish(self.current_position)
+            
+        if self.flushbot_status :         
             self.backward_motion(10)
             self.clear_costmaps()
             rospy.sleep(5)
