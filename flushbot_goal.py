@@ -29,7 +29,7 @@ class MoveRobot:
         # Initialize publishers and subscribers 
         self.cmd_vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
         self.flushbot_pub = rospy.Publisher('/flushbot_sub', String, queue_size=10)
-        self.flushbot_sub = rospy.Subscriber('/flushbot_pub', Bool, self.flushbot_status_callback)
+        self.flushbot_sub = rospy.Subscriber('/flushbot_pub', Float32, self.flushbot_status_callback)
         
         # Initialize the action client for move_base  
         self.client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -146,43 +146,34 @@ class MoveRobot:
         rospy.loginfo("Received flushbot_status : %s", self.flushbot_status)
     
     def Start_robot(self):
-        rospy.loginfo("waiting for flushbot to be active ... ")
-        while not self.flushbot_status and not rospy.is_shutdown():
-            rospy.sleep(3)
+        while not rospy.is_shutdown():
+            rospy.loginfo("waiting for flushbot to be active ... ")
+            while not self.flushbot_status and not rospy.is_shutdown():
+                rospy.sleep(3)
+            
+            # Execute actions based on flushbot_status
+            if self.flushbot_status == 1.0:
+                result = self.movebase_client(1)
+                if result:
+                    rospy.loginfo("Arrived at first goal")
+                    self.adjust_position()
+                    self.stop_motion(5)
+                    rospy.sleep(5)
+                    self.flushbot_status = 0.0
+                    self.current_position = "point_3"
+                    self.flushbot_pub.publish(self.current_position)
+            
+            elif self.flushbot_status == 2.0:
+                self.backward_motion(10)
+                self.clear_costmaps()
+                rospy.sleep(5)
+                result = self.movebase_client(2)
+                if result:
+                    rospy.loginfo("Return to origin")
+                    self.clear_costmaps()
+                    self.flushbot_status = 0.0
+                    rospy.sleep(5)
         
-        # Move to the first goal 
-        if self.flushbot_status == 1.0 : 
-            result = self.movebase_client(1)
-        else: 
-            result = False 
-        
-        # After reaching the first goal 
-        if self.drive_status :
-            rospy.loginfo("Arrived at first goal")
-            self.adjust_position()
-            self.stop_motion(5)
-            rospy.sleep(5)
-            
-            
-            self.flushbot_status = 0.0
-            
-            global current_position
-            current_position = "point_3"
-            self.flushbot_pub.publish(current_position)
-            
-        if self.flushbot_status == 2.0 :         
-            self.backward_motion(10)
-            self.clear_costmaps()
-            rospy.sleep(5)
-            
-            # Move to the origin goal
-            result = self.movebase_client(2)
-            rospy.loginfo("Return to origin")
-            self.clear_costmaps()
-            rospy.sleep(5)
-        
-        if result:
-            rospy.loginfo("Goal execution done!"+str(result))
             
 if __name__ == '__main__':
     flushbot = MoveRobot()
