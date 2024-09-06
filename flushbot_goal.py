@@ -1,3 +1,4 @@
+###  단독 구동이 가능함  ### 
 #!/usr/bin/env python
 
 import rospy
