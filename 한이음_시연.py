@@ -58,10 +58,10 @@ class MoveRobot:
         goal.target_pose.header.stamp = rospy.Time.now()
     
         if x==1:
-            goal.target_pose.pose.position.x = 3.656
-            goal.target_pose.pose.position.y = 0.2732
-            goal.target_pose.pose.orientation.z = 0.0231
-            goal.target_pose.pose.orientation.w = 0.999
+            goal.target_pose.pose.position.x = -0.75468
+            goal.target_pose.pose.position.y = 7.03461
+            goal.target_pose.pose.orientation.z = 0.99998
+            goal.target_pose.pose.orientation.w = 0.006799
         else: 
             goal.target_pose.pose.position.x = 0.
             goal.target_pose.pose.position.y = 0.
